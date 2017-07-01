@@ -1,4 +1,5 @@
 import tensorflow as tf
+import numpy as np
 
 hello_constant = tf.constant("Hello, Carla")
 
@@ -57,7 +58,7 @@ with tf.Session() as sess3:
 #initialize all variables
 n_features = 120
 n_labels = 5
-weights = tr.Variable(tf.truncated_normal((n_features, n_labels)))
+weights = tf.Variable(tf.truncated_normal((n_features, n_labels)))
 
 n_labels = 5
 bias = tf.Variable(tf.zeros(n_labels))
