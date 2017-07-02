@@ -13,7 +13,7 @@ filter_size_width = 5
 filter_size_height = 5
 
 # Input/ Image
-input = tf.placeholder(tf.float32, shape=[None, image_height, image_width, color_channel])
+input = tf.placeholder(tf.float32, shape=[None, image_height, image_width, color_channels])
 
 # Weight and bias
 weight = tf.Variable(tf.truncated_normal([filter_size_height, filter_size_width, color_channels, k_output]))
