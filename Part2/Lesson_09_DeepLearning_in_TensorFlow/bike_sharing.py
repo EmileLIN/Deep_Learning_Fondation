@@ -49,22 +49,25 @@ test_features, test_targets = test_data.drop(target_fields, axis=1), test_data[t
 
 
 # Take a part of training data as validation data
-train_features, train_targets = features[:-60*24], targets[:-60*24]
-val_features, val_targets = features[-60*24:], targets[-60*24:]
+train_features, train_targets = features[:-60*24], targets[:-60*24]['cnt'].to_frame()
+val_features, val_targets = features[-60*24:], targets[-60*24:]['cnt'].to_frame()
+
 
 
 # Step 4 : build the neuron network
 
 # Set the hyper parameters
-learning_rate = 0.001
-training_epochs = 50
+learning_rate = 0.01
+training_epochs = 1000
 batch_size = 128  
 display_step = 1
 
 # initialize the weights and biases
 n_features = np.shape(train_features)[1]
 n_hidden_layer = 25
-n_classes = np.shape(train_targets)[1]
+n_output = 1
+
+
 
 tf.reset_default_graph()
 
@@ -72,16 +75,16 @@ tf.reset_default_graph()
 # define the randomly initialized weights and biases
 weights = {
     'hidden_layer': tf.Variable(tf.random_normal([n_features, n_hidden_layer])),
-    'out': tf.Variable(tf.random_normal([n_hidden_layer, n_classes]))
+    'out': tf.Variable(tf.random_normal([n_hidden_layer, n_output]))
 }
 biases = {
     'hidden_layer': tf.Variable(tf.random_normal([n_hidden_layer])),
-    'out': tf.Variable(tf.random_normal([n_classes]))
+    'out': tf.Variable(tf.random_normal([n_output]))
 }
 
 # tf graph input
 x = tf.placeholder("float32", [None, n_features])
-y = tf.placeholder("float32", [None, n_classes])
+y = tf.placeholder("float32", [None, n_output])
 
 
 # hidden layer 
@@ -103,6 +106,7 @@ optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minim
 init = tf.global_variables_initializer()
 
 # Launch the graph
+
 with tf.Session() as sess:
     sess.run(init)
 
@@ -153,13 +157,19 @@ with tf.Session() as sess:
 with tf.Session() as sess:
     sess.run(init)
 
-    predictions = sess.run(output_layer, feed_dict={x: test_features, y: test_targets})
+    prediction = sess.run(output_layer, feed_dict={x: test_features, y: test_targets['cnt'].to_frame()})
 
     
+mean, std = scaled_features['cnt']
+print(mean)
+print(std)
 
 
-plt.plot(test_targets['cnt'], label="Real values")
-plt.plot(predictions[:,0], label="Predictions")
+prediction = prediction * std + mean
+labels = (test_targets['cnt'] * std + mean).tolist()
+
+plt.plot(labels, label="Real values")
+plt.plot(prediction, label="Predictions")
 plt.legend()
 _ = plt.ylim()
 
