@@ -2,8 +2,15 @@
 *.png
 *jpeg
 *.txt
+*.csv
 assets/*
 .DS_Store/*
+.ipynb_checkpoints
 .ipynb_checkpoints/*
 .gitignore
+*.pyc
+checkpoints
+*.zip
+data
+
 
