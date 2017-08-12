@@ -12,5 +12,6 @@ assets/*
 checkpoints
 *.zip
 data
-
-
+save*
+*.p
+checkpoint
